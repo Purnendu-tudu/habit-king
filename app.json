@@ -9,13 +9,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.habitking"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.habitking",
+      "useHermes": true
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +39,9 @@
       [
         "expo-font",
         {
-          "fonts":["./assets/fonts/KaushanScript-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/KaushanScript-Regular.ttf"
+          ]
         }
       ]
     ],

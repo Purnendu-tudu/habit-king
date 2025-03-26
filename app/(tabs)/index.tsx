@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import { FlashList } from "@shopify/flash-list";
 import * as SplashScreen from 'expo-splash-screen';
@@ -7,11 +7,15 @@ import HabitCard from "@/components/HabitCard";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useEffect, useRef, useState } from "react";
 
+import { supabase } from "@/utils/supabase";
+
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
 import { KaushanScript_400Regular, useFonts } from '@expo-google-fonts/kaushan-script'
+import { router, useRouter } from "expo-router";
+import { useUserState } from "@/utils/authStore";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 
 export default function Index() {
@@ -350,6 +354,8 @@ export default function Index() {
 
   const transLateY = useSharedValue(0);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const {user ,userLogout} = useUserState();
+  const router = useRouter();
 
   const animatedHeaderStyle = useAnimatedStyle(()=>{
     const interpolateY = interpolate(transLateY.value,[100,200],[0,-200], 'clamp')
@@ -358,9 +364,19 @@ export default function Index() {
     }
   })
 
+  const handelLogout = async () => {
+    const logout = await userLogout();
+    if(logout){
+      console.log("called");
+      router.replace('/login');
+    }
+  }
+
+  
+
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      // SplashScreen.hideAsync();
     }
   }, [loaded, error]);
 
@@ -378,6 +394,7 @@ export default function Index() {
           <Text style={style.title}>
             Habit King <AntDesign name="man" size={24} color="black" />
           </Text>
+          <TouchableOpacity onPress={handelLogout}><Text>Sign Out</Text></TouchableOpacity>
         </View>
         <View style={style.chartStyle}>
           <PieChart donut radius={100} innerRadius={55} data={DATA} showText textColor="black" textSize={10} semiCircle isAnimated animationDuration={300}/>
@@ -441,6 +458,7 @@ const style = StyleSheet.create({
     width: "100%",
     position: "absolute",
     height: 200,
+    zIndex:99
   },
   chartStyle: {
     backgroundColor: "white",

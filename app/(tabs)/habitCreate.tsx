@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-import React, { useState, useCallback, useRef, useMemo } from "react";
+import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { ScrollView } from "react-native";
 
 import BottomSheet, {
@@ -16,53 +16,56 @@ import BottomSheet, {
 
 // custom component import
 import HabitForm from "@/components/HabitForm";
+import HabitCreateCard from "@/components/HabitCreateCard";
+import { getAllDataFromTable } from "@/utils/handelData";
+import { FlashList } from "@shopify/flash-list";
+import { useUserHabits } from "@/utils/habitStore";
 
 const primaryColor = "#0891b2";
 
 const HabitCreate = () => {
+
+  const {publicHabits, userGetPublicHabits} = useUserHabits();
+
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [isOpen, setIsOpen] = useState(true);
 
-  const snapPoints = useMemo(() => ['70%'], []);
+  const snapPoints = useMemo(() => ['10%','90%'], []);
 
 
   const handelSnapPress = useCallback((index : number) => {
-    bottomSheetModalRef.current?.snapToIndex(index);
+    bottomSheetModalRef.current?.snapToIndex(1);
   },[]);
+
+  const closeBottomSheet = () => bottomSheetModalRef.current.close();
+
+  useEffect(()=>{
+    userGetPublicHabits("abcs");
+  },[]);
+  
+
+  
 
   return (
     <View style={style.maincontainer}>
-      
+      <View>
+        <Text style={style.title}>Public Habit List</Text>
+      </View>
       <View style={style.titleBarSection}>
         <TextInput placeholder="Search" style={style.searchBar}></TextInput>
         <TouchableOpacity style={style.button} onPress={() =>handelSnapPress(0)}>
           <Text style={{ color: "white" }}>Create</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={style.habitCard}>
-        <View style={style.habitCardContent}>
-          <View>
-            <Text>Card Title</Text>
-            <Text>Card Desciption</Text>
-          </View>
-          <View>
-            <TouchableOpacity style={style.habitCardButton}>
-              <Text>Make Habit</Text>
-            </TouchableOpacity> 
-          </View>
-        </View>
-        <View style={style.habitCardInfo}>
-          <Text>People Liked</Text>
-          <Text>100</Text>
-        </View>
+      <View style={{ flex: 1, width: "100%" }}>
+        <FlashList estimatedItemSize={30} data={publicHabits} contentContainerStyle={{ paddingBottom:90 }}  keyExtractor={(item) => item.habitId || Math.random().toString() } renderItem={({item}) => <HabitCreateCard id={item.habitId} count={item.userCount} title={item.habitTitle} description={item.habitDescription} onPress={()=>{}}/>} ></FlashList>
+        
       </View>
-
-
+     
       <BottomSheet ref={bottomSheetModalRef} index={-1} enableDynamicSizing={false} snapPoints={snapPoints} enablePanDownToClose={true}      >
         <BottomSheetView>
           <View style={style.habitForm}>
-            <HabitForm />
+            <HabitForm closeModal={closeBottomSheet} />
           </View>
         </BottomSheetView>
       </BottomSheet>
@@ -73,6 +76,11 @@ const HabitCreate = () => {
 const style = StyleSheet.create({
   maincontainer: {
     flex: 1,
+  },
+  title: {
+    fontSize: 30,
+    textAlign: "left",
+    fontFamily:"Kaushan-Regular"
   },
   titleBarSection: {
     display: "flex",
@@ -101,31 +109,7 @@ const style = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
   },
-  habitCard:{
-    borderWidth:2,
-    borderColor:'white',
-  },
-  habitCardContent:{
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    padding:5,
-    backgroundColor:'white',
-   
-    
-  },
-  habitCardButton:{
-    backgroundColor: primaryColor,
-    alignItems: "center",
-    padding: 5,
-    borderRadius: 5,
-  },
-  habitCardInfo:{
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    padding:5,
-  }
+  
 
 });
 
