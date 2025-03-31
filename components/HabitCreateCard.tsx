@@ -20,7 +20,7 @@ const HabitCreateCard = ({id,title, description, count,onPress}:HabitCreateCardP
           </View>
           <View>
             {id ?
-            <TouchableOpacity style={style.habitCardButton}>
+            <TouchableOpacity style={style.habitCardButton} onPress={onPress}>
               <Text style={style.habitCardBUttonText}>Make Habit</Text>
             </TouchableOpacity> : '⏳' }
           </View>

@@ -14,6 +14,7 @@ import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-n
 import { KaushanScript_400Regular, useFonts } from '@expo-google-fonts/kaushan-script'
 import { router, useRouter } from "expo-router";
 import { useUserState } from "@/utils/authStore";
+import { useUserHabits } from "@/utils/habitStore";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -43,308 +44,9 @@ export default function Index() {
     },
   ];
 
-  const habitData = [
-    {
-      id: 1,
-      title: "Morning Walk",
-      description: "Walk for 30 minutes to stay fit",
-      onPress: () => console.log("Morning Walk pressed!"),
-    },
-    {
-      id: 2,
-      title: "Read Book",
-      description: "Read 20 pages daily",
-      onPress: () => console.log("Read Book pressed!"),
-    },
-    {
-      id: 3,
-      title: "Drink Water",
-      description: "Drink 8 glasses of water",
-      onPress: () => console.log("Drink Water pressed!"),
-    },
-    {
-      id: 4,
-      title: "Meditate",
-      description: "10 minutes of daily meditation",
-      onPress: () => console.log("Meditate pressed!"),
-    },
-    {
-      id: 5,
-      title: "Learn Coding",
-      description: "Practice 1 hour of coding",
-      onPress: () => console.log("Learn Coding pressed!"),
-    },
-    {
-      id: 6,
-      title: "Exercise",
-      description: "Do 30 minutes of exercise",
-      onPress: () => console.log("Exercise pressed!"),
-    },
-    {
-      id: 7,
-      title: "Journal",
-      description: "Write down your thoughts daily",
-      onPress: () => console.log("Journal pressed!"),
-    },
-    {
-      id: 8,
-      title: "Plan Your Day",
-      description: "Spend 10 minutes planning your day",
-      onPress: () => console.log("Plan Your Day pressed!"),
-    },
-    {
-      id: 9,
-      title: "Eat Healthy",
-      description: "Include fruits and vegetables in your diet",
-      onPress: () => console.log("Eat Healthy pressed!"),
-    },
-    {
-      id: 10,
-      title: "Practice Gratitude",
-      description: "Write 3 things you're grateful for",
-      onPress: () => console.log("Practice Gratitude pressed!"),
-    },
-    {
-      id: 11,
-      title: "Stretch",
-      description: "Stretch for 5 minutes to improve flexibility",
-      onPress: () => console.log("Stretch pressed!"),
-    },
-    {
-      id: 12,
-      title: "Limit Screen Time",
-      description: "Reduce screen time by 30 minutes",
-      onPress: () => console.log("Limit Screen Time pressed!"),
-    },
-    {
-      id: 13,
-      title: "Clean Your Space",
-      description: "Spend 10 minutes decluttering",
-      onPress: () => console.log("Clean Your Space pressed!"),
-    },
-    {
-      id: 14,
-      title: "Practice Deep Breathing",
-      description: "5 minutes of deep breathing",
-      onPress: () => console.log("Practice Deep Breathing pressed!"),
-    },
-    {
-      id: 15,
-      title: "Sleep Early",
-      description: "Get 7-8 hours of quality sleep",
-      onPress: () => console.log("Sleep Early pressed!"),
-    },
-    {
-      id: 16,
-      title: "Listen to Podcasts",
-      description: "Listen to a 20-minute podcast",
-      onPress: () => console.log("Listen to Podcasts pressed!"),
-    },
-    {
-      id: 17,
-      title: "Spend Time with Family",
-      description: "Quality time with loved ones",
-      onPress: () => console.log("Spend Time with Family pressed!"),
-    },
-    {
-      id: 18,
-      title: "Practice a Hobby",
-      description: "Spend 30 minutes on your favorite hobby",
-      onPress: () => console.log("Practice a Hobby pressed!"),
-    },
-    {
-      id: 19,
-      title: "Learn a New Skill",
-      description: "Dedicate 1 hour to learning something new",
-      onPress: () => console.log("Learn a New Skill pressed!"),
-    },
-    {
-      id: 20,
-      title: "Drink Herbal Tea",
-      description: "Replace one cup of coffee with tea",
-      onPress: () => console.log("Drink Herbal Tea pressed!"),
-    },
-    {
-      id: 21,
-      title: "Do Yoga",
-      description: "10 minutes of basic yoga",
-      onPress: () => console.log("Do Yoga pressed!"),
-    },
-    {
-      id: 22,
-      title: "Take Breaks",
-      description: "Rest for 5 minutes every hour",
-      onPress: () => console.log("Take Breaks pressed!"),
-    },
-    {
-      id: 23,
-      title: "Connect with Friends",
-      description: "Call or text a friend",
-      onPress: () => console.log("Connect with Friends pressed!"),
-    },
-    {
-      id: 24,
-      title: "Limit Sugar Intake",
-      description: "Avoid sugary snacks",
-      onPress: () => console.log("Limit Sugar Intake pressed!"),
-    },
-    {
-      id: 25,
-      title: "Visualize Your Goals",
-      description: "Spend 5 minutes visualizing success",
-      onPress: () => console.log("Visualize Your Goals pressed!"),
-    },
-    {
-      id: 26,
-      title: "Smile More",
-      description: "Make a conscious effort to smile",
-      onPress: () => console.log("Smile More pressed!"),
-    },
-    {
-      id: 27,
-      title: "Read News",
-      description: "Stay updated with current events",
-      onPress: () => console.log("Read News pressed!"),
-    },
-    {
-      id: 28,
-      title: "Track Expenses",
-      description: "Monitor daily spending",
-      onPress: () => console.log("Track Expenses pressed!"),
-    },
-    {
-      id: 29,
-      title: "Do Affirmations",
-      description: "Repeat positive affirmations",
-      onPress: () => console.log("Do Affirmations pressed!"),
-    },
-    {
-      id: 30,
-      title: "Volunteer",
-      description: "Help someone in need",
-      onPress: () => console.log("Volunteer pressed!"),
-    },
-    {
-      id: 31,
-      title: "Declutter Inbox",
-      description: "Clear 10 unnecessary emails",
-      onPress: () => console.log("Declutter Inbox pressed!"),
-    },
-    {
-      id: 32,
-      title: "Limit Caffeine",
-      description: "Reduce caffeine consumption",
-      onPress: () => console.log("Limit Caffeine pressed!"),
-    },
-    {
-      id: 33,
-      title: "Cook at Home",
-      description: "Prepare a healthy meal",
-      onPress: () => console.log("Cook at Home pressed!"),
-    },
-    {
-      id: 34,
-      title: "Practice Listening",
-      description: "Be fully present in conversations",
-      onPress: () => console.log("Practice Listening pressed!"),
-    },
-    {
-      id: 35,
-      title: "Daily Reflection",
-      description: "Reflect on what went well today",
-      onPress: () => console.log("Daily Reflection pressed!"),
-    },
-    {
-      id: 36,
-      title: "Hydrate First Thing",
-      description: "Drink water right after waking up",
-      onPress: () => console.log("Hydrate First Thing pressed!"),
-    },
-    {
-      id: 37,
-      title: "Learn a New Language",
-      description: "Spend 20 minutes practicing",
-      onPress: () => console.log("Learn a New Language pressed!"),
-    },
-    {
-      id: 38,
-      title: "Take a Walk Outside",
-      description: "Get fresh air for 10 minutes",
-      onPress: () => console.log("Take a Walk Outside pressed!"),
-    },
-    {
-      id: 39,
-      title: "Limit Social Media",
-      description: "Cut back 15 minutes on social apps",
-      onPress: () => console.log("Limit Social Media pressed!"),
-    },
-    {
-      id: 40,
-      title: "Practice Forgiveness",
-      description: "Let go of past grievances",
-      onPress: () => console.log("Practice Forgiveness pressed!"),
-    },
-    {
-      id: 41,
-      title: "Express Gratitude",
-      description: "Say thanks to someone today",
-      onPress: () => console.log("Express Gratitude pressed!"),
-    },
-    {
-      id: 42,
-      title: "Watch Educational Videos",
-      description: "Watch a TED Talk or documentary",
-      onPress: () => console.log("Watch Educational Videos pressed!"),
-    },
-    {
-      id: 43,
-      title: "Create a To-Do List",
-      description: "List out important tasks",
-      onPress: () => console.log("Create a To-Do List pressed!"),
-    },
-    {
-      id: 44,
-      title: "Improve Posture",
-      description: "Maintain good posture while sitting",
-      onPress: () => console.log("Improve Posture pressed!"),
-    },
-    {
-      id: 45,
-      title: "Limit Junk Food",
-      description: "Reduce processed food intake",
-      onPress: () => console.log("Limit Junk Food pressed!"),
-    },
-    {
-      id: 46,
-      title: "Compliment Someone",
-      description: "Give a genuine compliment",
-      onPress: () => console.log("Compliment Someone pressed!"),
-    },
-    {
-      id: 47,
-      title: "Organize Workspace",
-      description: "Spend 10 minutes cleaning your desk",
-      onPress: () => console.log("Organize Workspace pressed!"),
-    },
-    {
-      id: 48,
-      title: "Unplug Before Bed",
-      description: "Avoid screens 30 mins before sleeping",
-      onPress: () => console.log("Unplug Before Bed pressed!"),
-    },
-    {
-      id: 49,
-      title: "Set Daily Intentions",
-      description: "Define goals for the day",
-      onPress: () => console.log("Set Daily Intentions pressed!"),
-    },
-    {
-      id: 50,
-      title: "Practice Kindness",
-      description: "Do something kind for others",
-      onPress: () => console.log("Practice Kindness pressed!"),
-    },
-  ];
+  const { userHabits } = useUserHabits();
+
+  
 
   const [loaded , error] = useFonts({
     "Kaushan-Regular" :KaushanScript_400Regular
@@ -363,6 +65,8 @@ export default function Index() {
       transform : [{translateY : interpolateY}]
     }
   })
+
+  console.log(userHabits +"gg");
 
   const handelLogout = async () => {
     const logout = await userLogout();
@@ -426,9 +130,9 @@ export default function Index() {
 
       <View style={{ flex: 1, width: "100%" }}>
         <FlashList
-          data={habitData}
+          data={userHabits}
           keyExtractor={(item, index) =>
-            item.id ? String(item.id) : String(index)
+            item.habitId ? String(item.habitId) : String(index)
           }
           estimatedItemSize={50}
           contentContainerStyle={{
@@ -440,7 +144,7 @@ export default function Index() {
           }}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <HabitCard title={item.title} description={item.description} />
+            <HabitCard title={item.habitTitle} description={item.habitDescription} />
           )}
         />
       </View>

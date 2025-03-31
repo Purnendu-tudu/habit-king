@@ -20,31 +20,33 @@ import HabitCreateCard from "@/components/HabitCreateCard";
 import { getAllDataFromTable } from "@/utils/handelData";
 import { FlashList } from "@shopify/flash-list";
 import { useUserHabits } from "@/utils/habitStore";
+import { useUserState } from "@/utils/authStore";
 
 const primaryColor = "#0891b2";
 
 const HabitCreate = () => {
 
-  const {publicHabits, userGetPublicHabits} = useUserHabits();
+  const { publicHabits, userGetPublicHabits, userMakeHabit } = useUserHabits();
+  const {user} = useUserState();
 
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [isOpen, setIsOpen] = useState(true);
 
-  const snapPoints = useMemo(() => ['10%','90%'], []);
+  const snapPoints = useMemo(() => ['10%', '90%'], []);
 
 
-  const handelSnapPress = useCallback((index : number) => {
+  const handelSnapPress = useCallback((index: number) => {
     bottomSheetModalRef.current?.snapToIndex(1);
-  },[]);
+  }, []);
 
   const closeBottomSheet = () => bottomSheetModalRef.current.close();
 
-  useEffect(()=>{
+  useEffect(() => {
     userGetPublicHabits("abcs");
-  },[]);
-  
+  }, []);
 
-  
+
+
 
   return (
     <View style={style.maincontainer}>
@@ -53,15 +55,28 @@ const HabitCreate = () => {
       </View>
       <View style={style.titleBarSection}>
         <TextInput placeholder="Search" style={style.searchBar}></TextInput>
-        <TouchableOpacity style={style.button} onPress={() =>handelSnapPress(0)}>
+        <TouchableOpacity style={style.button} onPress={() => handelSnapPress(0)}>
           <Text style={{ color: "white" }}>Create</Text>
         </TouchableOpacity>
       </View>
       <View style={{ flex: 1, width: "100%" }}>
-        <FlashList estimatedItemSize={30} data={publicHabits} contentContainerStyle={{ paddingBottom:90 }}  keyExtractor={(item) => item.habitId || Math.random().toString() } renderItem={({item}) => <HabitCreateCard id={item.habitId} count={item.userCount} title={item.habitTitle} description={item.habitDescription} onPress={()=>{}}/>} ></FlashList>
-        
+        <FlashList 
+        estimatedItemSize={30} 
+        data={publicHabits} 
+        contentContainerStyle={{ paddingBottom: 90 }} 
+        keyExtractor={(item) => item.habitId || Math.random().toString()} 
+        renderItem={({ item }) => 
+        <HabitCreateCard 
+        id={item.habitId} 
+        count={item.userCount} 
+        title={item.habitTitle} 
+        description={item.habitDescription} 
+        onPress={() => userMakeHabit( item.habitId,user.id,item)} />} >
+
+        </FlashList>
+
       </View>
-     
+
       <BottomSheet ref={bottomSheetModalRef} index={-1} enableDynamicSizing={false} snapPoints={snapPoints} enablePanDownToClose={true}      >
         <BottomSheetView>
           <View style={style.habitForm}>
@@ -80,7 +95,7 @@ const style = StyleSheet.create({
   title: {
     fontSize: 30,
     textAlign: "left",
-    fontFamily:"Kaushan-Regular"
+    fontFamily: "Kaushan-Regular"
   },
   titleBarSection: {
     display: "flex",
@@ -109,7 +124,7 @@ const style = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
   },
-  
+
 
 });
 
