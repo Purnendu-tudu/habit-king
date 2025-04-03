@@ -44,7 +44,7 @@ export default function Index() {
     },
   ];
 
-  const { userHabits } = useUserHabits();
+  const { userHabits, userCurrentHabits } = useUserHabits();
 
   
 
@@ -79,6 +79,8 @@ export default function Index() {
   
 
   useEffect(() => {
+    console.log(user.id);
+    userCurrentHabits(user.id);
     if (loaded || error) {
       // SplashScreen.hideAsync();
     }

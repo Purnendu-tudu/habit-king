@@ -22,7 +22,8 @@ type UserHabitTypes = {
     userSaveHabitToDb: (tempId: string, title: string, description: string, userId: string) => Promise<void>;
     userMakeHabit: (habitId: string, userId: string, currentHabit: UserHabit) => Promise<void>;
     userGetPublicHabits: (sessionToken: string) => Promise<void>;
-    userCurrentHabits: () => Promise<void>;
+    userCurrentHabits: (userId: string) => Promise<void>;
+   
 
 
 }
@@ -118,7 +119,33 @@ export const useUserHabits = create<UserHabitTypes>((set, get) => ({
             ],
         }));
     },
-    userCurrentHabits: async () => {
+    userCurrentHabits: async (userId) => {
+        const {data:habitIds, error: habitIdError} = await supabase.from('user_data').select('habit_id').eq("user_id", userId);
+        
+        if(habitIdError){
+            alert("Failed to fecth habit Ids");
+            return;
+        }
+
+        const habitIdstoFind = habitIds.map((habit)=> habit.habit_id);
+
+        if(habitIdstoFind.length > 0){
+            const {data, error} = await supabase.from('habit_list').select("*").in("id", habitIdstoFind);
+            if(error){
+                alert("Failed to get habit Data");
+                return;
+            }
+            set((state)=>({
+                userHabits :[...state.userHabits, ...data.map((habit) => ({
+                    habitId: habit.id.toString(),
+                    habitTitle: habit.habit_title,
+                    habitDescription: habit.habit_description,
+                    userCount: habit.user_count.toString(),
+                    userId: habit.user_id,
+                })),]
+            }))
+        }
+
         
     }
 }));
